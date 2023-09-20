@@ -29,8 +29,11 @@
         private void InitializeComponent()
         {
             panel1 = new Panel();
+            idtxt = new Label();
             comboBox2 = new ComboBox();
             panel4 = new Panel();
+            label5 = new Label();
+            resetbtn = new Button();
             comboBox1 = new ComboBox();
             panel3 = new Panel();
             button3 = new Button();
@@ -55,6 +58,7 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(idtxt);
             panel1.Controls.Add(comboBox2);
             panel1.Controls.Add(panel4);
             panel1.Controls.Add(panel3);
@@ -71,6 +75,14 @@
             panel1.Size = new Size(1158, 206);
             panel1.TabIndex = 0;
             // 
+            // idtxt
+            // 
+            idtxt.AutoSize = true;
+            idtxt.Location = new Point(399, 31);
+            idtxt.Name = "idtxt";
+            idtxt.Size = new Size(0, 25);
+            idtxt.TabIndex = 11;
+            // 
             // comboBox2
             // 
             comboBox2.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -85,20 +97,41 @@
             // panel4
             // 
             panel4.BackColor = SystemColors.ActiveCaption;
+            panel4.Controls.Add(label5);
+            panel4.Controls.Add(resetbtn);
             panel4.Controls.Add(comboBox1);
             panel4.Location = new Point(654, 116);
             panel4.Name = "panel4";
             panel4.Size = new Size(424, 72);
             panel4.TabIndex = 9;
             // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(29, 8);
+            label5.Name = "label5";
+            label5.Size = new Size(100, 25);
+            label5.TabIndex = 2;
+            label5.Text = "Completed";
+            // 
+            // resetbtn
+            // 
+            resetbtn.Location = new Point(283, 30);
+            resetbtn.Name = "resetbtn";
+            resetbtn.Size = new Size(125, 37);
+            resetbtn.TabIndex = 1;
+            resetbtn.Text = "Reset";
+            resetbtn.UseVisualStyleBackColor = true;
+            resetbtn.Click += resetbtn_Click;
+            // 
             // comboBox1
             // 
             comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBox1.FormattingEnabled = true;
             comboBox1.Items.AddRange(new object[] { "No", "Yes" });
-            comboBox1.Location = new Point(29, 21);
+            comboBox1.Location = new Point(29, 32);
             comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(182, 33);
+            comboBox1.Size = new Size(201, 33);
             comboBox1.TabIndex = 0;
             comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
             // 
@@ -121,6 +154,7 @@
             button3.TabIndex = 2;
             button3.Text = "Delete";
             button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
             // 
             // button2
             // 
@@ -128,7 +162,7 @@
             button2.Name = "button2";
             button2.Size = new Size(144, 44);
             button2.TabIndex = 1;
-            button2.Text = "Edit";
+            button2.Text = "Update";
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
@@ -193,6 +227,8 @@
             textBox2.Name = "textBox2";
             textBox2.Size = new Size(343, 31);
             textBox2.TabIndex = 2;
+            textBox2.TextChanged += textBox2_TextChanged;
+            textBox2.KeyUp += textBox2_KeyUp;
             // 
             // dateTimePicker1
             // 
@@ -227,11 +263,11 @@
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView1.BackgroundColor = SystemColors.ActiveCaption;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(0, 25);
+            dataGridView1.Location = new Point(3, 25);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowHeadersWidth = 62;
             dataGridView1.RowTemplate.Height = 33;
-            dataGridView1.Size = new Size(1155, 350);
+            dataGridView1.Size = new Size(1152, 350);
             dataGridView1.TabIndex = 0;
             dataGridView1.CellContentClick += dataGridView1_CellContentClick;
             // 
@@ -248,6 +284,7 @@
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             panel4.ResumeLayout(false);
+            panel4.PerformLayout();
             panel3.ResumeLayout(false);
             panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
@@ -274,5 +311,8 @@
         private Panel panel4;
         private ComboBox comboBox1;
         private ComboBox comboBox2;
+        private Button resetbtn;
+        private Label idtxt;
+        private Label label5;
     }
 }
