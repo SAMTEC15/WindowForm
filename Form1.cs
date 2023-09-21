@@ -159,8 +159,8 @@ namespace ToDoList
                 if (e.ColumnIndex == 0)
                 {
 
-                    string? comp = dataGridView1["Check", e.RowIndex].Value.ToString();
-                    string? id = dataGridView1["Id", e.RowIndex].Value.ToString();
+                    string comp = dataGridView1["Check", e.RowIndex].Value.ToString();
+                    string id = dataGridView1["Id", e.RowIndex].Value.ToString();
                     if (comp == "True")
                     {
                         checkedIn.Add(id);
@@ -178,11 +178,11 @@ namespace ToDoList
                 if (e.ColumnIndex == button.Index)
                 {
 
-                    string? id2 = dataGridView1["Id", e.RowIndex].Value.ToString();
-                    string? title = dataGridView1["Title", e.RowIndex].Value.ToString();
-                    string? description = dataGridView1["Description", e.RowIndex].Value.ToString();
-                    string? date = dataGridView1["Date", e.RowIndex].Value.ToString();
-                    string? comp2 = dataGridView1["Completed", e.RowIndex].Value.ToString();
+                    string id2 = dataGridView1["Id", e.RowIndex].Value.ToString();
+                    string title = dataGridView1["Title", e.RowIndex].Value.ToString();
+                    string description = dataGridView1["Description", e.RowIndex].Value.ToString();
+                    string date = dataGridView1["Date", e.RowIndex].Value.ToString();
+                    string comp2 = dataGridView1["Completed", e.RowIndex].Value.ToString();
                     idtxt.Text = id2;
                     textBox1.Text = title;
                     textBox3.Text = description;
@@ -256,7 +256,7 @@ namespace ToDoList
             }
             else
             {
-                string? search_criteria = comboBox1.SelectedIndex == 0 ? "TITLE" : "DATE";
+                string search_criteria = comboBox1.SelectedIndex == 0 ? "TITLE" : "DATE";
                 string sql = "usp_tododb '','','','','" + search + "','" + search_criteria + "'";
                 DataSet ds = DataAccessDb.fillDataSet(sql);
                 dataGridView1.DataSource = ds.Tables[0];
