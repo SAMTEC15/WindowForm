@@ -1,14 +1,13 @@
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Web;
-using System.Windows.Forms;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace ToDoList
 {
     public partial class Form1 : Form
     {
-        DataAccessDb dataAccess = new DataAccessDb();
+        //DataAccessDb dataAccess = new DataAccessDb();
         public Form1()
         {
             InitializeComponent();
@@ -54,7 +53,7 @@ namespace ToDoList
                 return;
             }
 
-            string sql = "ToDoListDb '" + idtxt.Text + "','" + textBox1.Text + "','" + dateTimePicker1.Value + "','" + comboBox1.SelectedItem.ToString() + "','" + textBox3.Text + "','UPDATE'";
+            string sql = "usp_tododb '" + idtxt.Text + "','" + textBox1.Text + "','" + dateTimePicker1.Value + "','" + comboBox1.SelectedItem.ToString() + "','" + textBox3.Text + "','UPDATE'";
             DataAccessDb.fillDataSet(sql);
             Reset();
             showAll();
@@ -68,14 +67,35 @@ namespace ToDoList
 
         public void Add()
         {
-            if (textBox1.Text == "" || textBox3.Text == "")
+            try
+            {
+                SqlConnection con = new SqlConnection("Data Source=SAMTECMEDIA\\SQLEXPRESS;Initial Catalog=ToDoApp2;Integrated Security=True");
+                con.Open();
+                SqlCommand cmd = new SqlCommand("insert into details values(@id,@title,@date,@dsctn)", con);
+                cmd.Parameters.AddWithValue("@id", int.Parse(textBox1.Text));
+                cmd.Parameters.AddWithValue("@title", textBox3.Text);
+                cmd.Parameters.AddWithValue("@date", dateTimePicker1.Value);
+                cmd.Parameters.AddWithValue("@dsctn", comboBox1.Text);
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occured {0}", ex.Message);
+            }
+            MessageBox.Show("Successfully Added");
+
+
+
+
+            /*if (textBox1.Text == "" || textBox3.Text == "")
             {
                 MessageBox.Show("Please input all fields");
                 return;
             }
-            string sql = "ToDoListDb '','" + textBox1.Text + "','" + dateTimePicker1.Value + "','" + comboBox1.SelectedItem.ToString() + "','" + textBox3.Text + "','ADD'";
+            string sql = "usp_tododb '','" + textBox1.Text + "','" + dateTimePicker1.Value + "','" + comboBox1.SelectedItem.ToString() + "','" + textBox3.Text + "','ADD'";
             DataAccessDb.fillDataSet(sql);
-            showAll();
+            showAll();*/
         }
         public void Delete()
         {
@@ -97,12 +117,12 @@ namespace ToDoList
             button.Text = "Edit";
             button.UseColumnTextForButtonValue = true;
 
-            string sql = "ToDoListDb '','','','','','VIEW'";
+            string sql = "usp_tododb '','','','','','VIEW'";
             DataSet ds = DataAccessDb.fillDataSet(sql);
             dataGridView1.Columns.Clear();
             dataGridView1.Columns.Add(check);
 
-           // dataGridView1.DataSource = ds.Tables[0];
+            // dataGridView1.DataSource = ds.Tables[0];
             dataGridView1.Columns.Add(button);
         }
 
@@ -214,7 +234,7 @@ namespace ToDoList
             }
             foreach (string element in checkedIn)
             {
-                string sql = "ToDoListDb '" + element + "','','','','', 'DELETE' ";
+                string sql = "usp_tododb '" + element + "','','','','', 'DELETE' ";
                 DataAccessDb.fillDataSet(sql);
             }
 
@@ -237,7 +257,7 @@ namespace ToDoList
             else
             {
                 string? search_criteria = comboBox1.SelectedIndex == 0 ? "TITLE" : "DATE";
-                string sql = "ToDoListDb '','','','','" + search + "','" + search_criteria + "'";
+                string sql = "usp_tododb '','','','','" + search + "','" + search_criteria + "'";
                 DataSet ds = DataAccessDb.fillDataSet(sql);
                 dataGridView1.DataSource = ds.Tables[0];
             }
@@ -245,22 +265,24 @@ namespace ToDoList
     }
     public class DataAccessDb
     {
-        public static SqlConnection sqlConnection = new SqlConnection("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
+        public static SqlConnection sqlConnection = new SqlConnection("Server=SAMTECMEDIA\\SQLEXPRESS;Database=ToDoApp;Trusted_Connection=True");
 
         public static DataSet fillDataSet(string sql)
         {
             try
             {
-                DataSet dset = new DataSet();                                   //usp_todoapp
+                DataSet dset = new DataSet();                                   //ToDoList.DataAccessDb' 
                 SqlCommand cmd = new SqlCommand(sql, sqlConnection);
                 SqlDataAdapter adp = new SqlDataAdapter(cmd);
                 adp.Fill(dset);
+                MessageBox.Show("Connection successful");
                 return dset;
             }
             catch (Exception ex)
-            { MessageBox.Show(ex.Message); }
+            {
+                MessageBox.Show("Error: "+ex.Message);
+            }
             return null;
-
         }
     }
 
