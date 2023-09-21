@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Web;
@@ -52,8 +53,8 @@ namespace ToDoList
                 MessageBox.Show("Select record to update");
                 return;
             }
-            
-            string sql = "usp_todoapp '"+idtxt.Text+"','" + textBox1.Text + "','" + dateTimePicker1.Value + "','" + comboBox1.SelectedItem.ToString() + "','" + textBox3.Text + "','UPDATE'";
+
+            string sql = "ToDoListDb '" + idtxt.Text + "','" + textBox1.Text + "','" + dateTimePicker1.Value + "','" + comboBox1.SelectedItem.ToString() + "','" + textBox3.Text + "','UPDATE'";
             DataAccessDb.fillDataSet(sql);
             Reset();
             showAll();
@@ -72,7 +73,7 @@ namespace ToDoList
                 MessageBox.Show("Please input all fields");
                 return;
             }
-            string sql = "usp_todoapp '','" + textBox1.Text + "','" + dateTimePicker1.Value + "','" + comboBox1.SelectedItem.ToString() + "','" + textBox3.Text + "','ADD'";
+            string sql = "ToDoListDb '','" + textBox1.Text + "','" + dateTimePicker1.Value + "','" + comboBox1.SelectedItem.ToString() + "','" + textBox3.Text + "','ADD'";
             DataAccessDb.fillDataSet(sql);
             showAll();
         }
@@ -96,12 +97,12 @@ namespace ToDoList
             button.Text = "Edit";
             button.UseColumnTextForButtonValue = true;
 
-            string sql = "usp_todoapp '','','','','','VIEW'";
+            string sql = "ToDoListDb '','','','','','VIEW'";
             DataSet ds = DataAccessDb.fillDataSet(sql);
             dataGridView1.Columns.Clear();
             dataGridView1.Columns.Add(check);
 
-            dataGridView1.DataSource = ds.Tables[0];
+           // dataGridView1.DataSource = ds.Tables[0];
             dataGridView1.Columns.Add(button);
         }
 
@@ -213,7 +214,7 @@ namespace ToDoList
             }
             foreach (string element in checkedIn)
             {
-                string sql = "usp_todoapp '" + element + "','','','','', 'DELETE' ";
+                string sql = "ToDoListDb '" + element + "','','','','', 'DELETE' ";
                 DataAccessDb.fillDataSet(sql);
             }
 
@@ -223,7 +224,7 @@ namespace ToDoList
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
-            
+
         }
 
         private void textBox2_KeyUp(object sender, KeyEventArgs e)
@@ -236,7 +237,7 @@ namespace ToDoList
             else
             {
                 string? search_criteria = comboBox1.SelectedIndex == 0 ? "TITLE" : "DATE";
-                string sql = "usp_todoapp '','','','','" + search +"','"+ search_criteria + "'";
+                string sql = "ToDoListDb '','','','','" + search + "','" + search_criteria + "'";
                 DataSet ds = DataAccessDb.fillDataSet(sql);
                 dataGridView1.DataSource = ds.Tables[0];
             }
@@ -244,15 +245,22 @@ namespace ToDoList
     }
     public class DataAccessDb
     {
-        public static SqlConnection sqlConnection = new SqlConnection("Server=localhost\\SQLEXPRESS;Database=ToDoListDb;Trusted_Connection=True");
+        public static SqlConnection sqlConnection = new SqlConnection("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
 
         public static DataSet fillDataSet(string sql)
         {
-            DataSet dset = new DataSet();
-            SqlCommand cmd = new SqlCommand(sql, sqlConnection);
-            SqlDataAdapter adp = new SqlDataAdapter(cmd);
-            adp.Fill(dset);
-            return dset;
+            try
+            {
+                DataSet dset = new DataSet();                                   //usp_todoapp
+                SqlCommand cmd = new SqlCommand(sql, sqlConnection);
+                SqlDataAdapter adp = new SqlDataAdapter(cmd);
+                adp.Fill(dset);
+                return dset;
+            }
+            catch (Exception ex)
+            { MessageBox.Show(ex.Message); }
+            return null;
+
         }
     }
 

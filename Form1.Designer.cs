@@ -96,7 +96,7 @@
             // 
             // panel4
             // 
-            panel4.BackColor = SystemColors.ActiveCaption;
+            panel4.BackColor = Color.FromArgb(255, 192, 255);
             panel4.Controls.Add(label5);
             panel4.Controls.Add(resetbtn);
             panel4.Controls.Add(comboBox1);
@@ -137,7 +137,7 @@
             // 
             // panel3
             // 
-            panel3.BackColor = SystemColors.ActiveCaption;
+            panel3.BackColor = Color.FromArgb(255, 192, 255);
             panel3.Controls.Add(button3);
             panel3.Controls.Add(button2);
             panel3.Controls.Add(button1);
@@ -248,7 +248,7 @@
             // panel2
             // 
             panel2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            panel2.BackColor = SystemColors.Info;
+            panel2.BackColor = Color.FromArgb(64, 0, 64);
             panel2.Controls.Add(dataGridView1);
             panel2.Location = new Point(12, 262);
             panel2.Name = "panel2";
@@ -261,7 +261,7 @@
             dataGridView1.AllowUserToDeleteRows = false;
             dataGridView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridView1.BackgroundColor = SystemColors.ActiveCaption;
+            dataGridView1.BackgroundColor = Color.FromArgb(255, 192, 255);
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Location = new Point(3, 25);
             dataGridView1.Name = "dataGridView1";
@@ -279,7 +279,7 @@
             Controls.Add(panel2);
             Controls.Add(panel1);
             Name = "Form1";
-            Text = "NanyaToDo";
+            Text = "ToDo";
             Load += Form1_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
