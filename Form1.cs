@@ -7,7 +7,7 @@ namespace ToDoList
 {
     public partial class Form1 : Form
     {
-        //DataAccessDb dataAccess = new DataAccessDb();
+        DataAccessDb dataAccess = new DataAccessDb();
         public Form1()
         {
             InitializeComponent();
@@ -54,12 +54,12 @@ namespace ToDoList
             }
 
             string sql = "usp_tododb '" + idtxt.Text + "','" + textBox1.Text + "','" + dateTimePicker1.Value + "','" + comboBox1.SelectedItem.ToString() + "','" + textBox3.Text + "','UPDATE'";
-            DataAccessDb.fillDataSet(sql);
+            dataAccess.fillDataSet(sql);
             Reset();
             showAll();
         }
 
-        private void button1_Click(object sender, EventArgs e) //save btn
+        private void button1_Click(object sender, EventArgs e)
         {
             Add();
         }
@@ -69,21 +69,20 @@ namespace ToDoList
         {
             try
             {
-                SqlConnection con = new SqlConnection("Data Source=SAMTECMEDIA\\SQLEXPRESS;Initial Catalog=ToDoApp2;Integrated Security=True");
-                con.Open();
-                SqlCommand cmd = new SqlCommand("insert into details values(@id,@title,@date,@dsctn)", con);
-                cmd.Parameters.AddWithValue("@id", int.Parse(textBox1.Text));
-                cmd.Parameters.AddWithValue("@title", textBox3.Text);
-                cmd.Parameters.AddWithValue("@date", dateTimePicker1.Value);
-                cmd.Parameters.AddWithValue("@dsctn", comboBox1.Text);
-                cmd.ExecuteNonQuery();
-                con.Close();
+                
+                string search_criteria = comboBox1.SelectedIndex == 0 ? "TITLE" : "DATE";
+                string sql = "usp_tododb '','" + textBox1.Text + "','" + dateTimePicker1.Value + "','" + textBox3.Text + "','" + comboBox1.SelectedItem.ToString() + "','ADD'";
+
+                dataAccess.fillDataSet(sql);
+                showAll();
+                MessageBox.Show("Successfully Added");
+
             }
             catch (Exception ex)
             {
                 Console.WriteLine("An error occured {0}", ex.Message);
             }
-            MessageBox.Show("Successfully Added");
+            
 
 
 
@@ -118,11 +117,13 @@ namespace ToDoList
             button.UseColumnTextForButtonValue = true;
 
             string sql = "usp_tododb '','','','','','VIEW'";
-            DataSet ds = DataAccessDb.fillDataSet(sql);
+            DataSet ds = dataAccess.fillDataSet(sql);
+
             dataGridView1.Columns.Clear();
             dataGridView1.Columns.Add(check);
 
-            // dataGridView1.DataSource = ds.Tables[0];
+            dataGridView1.DataSource = ds.Tables[0];
+
             dataGridView1.Columns.Add(button);
         }
 
@@ -150,9 +151,10 @@ namespace ToDoList
 
         List<string> checkedIn = new List<string>();
 
+        //Edit method
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-
+            
             dataGridView1.EndEdit();
             try
             {
@@ -160,6 +162,7 @@ namespace ToDoList
                 {
 
                     string comp = dataGridView1["Check", e.RowIndex].Value.ToString();
+
                     string id = dataGridView1["Id", e.RowIndex].Value.ToString();
                     if (comp == "True")
                     {
@@ -180,7 +183,7 @@ namespace ToDoList
 
                     string id2 = dataGridView1["Id", e.RowIndex].Value.ToString();
                     string title = dataGridView1["Title", e.RowIndex].Value.ToString();
-                    string description = dataGridView1["Description", e.RowIndex].Value.ToString();
+                    string description = dataGridView1["_Description", e.RowIndex].Value.ToString();
                     string date = dataGridView1["Date", e.RowIndex].Value.ToString();
                     string comp2 = dataGridView1["Completed", e.RowIndex].Value.ToString();
                     idtxt.Text = id2;
@@ -235,7 +238,7 @@ namespace ToDoList
             foreach (string element in checkedIn)
             {
                 string sql = "usp_tododb '" + element + "','','','','', 'DELETE' ";
-                DataAccessDb.fillDataSet(sql);
+                dataAccess.fillDataSet(sql);
             }
 
             Reset();
@@ -258,29 +261,35 @@ namespace ToDoList
             {
                 string search_criteria = comboBox1.SelectedIndex == 0 ? "TITLE" : "DATE";
                 string sql = "usp_tododb '','','','','" + search + "','" + search_criteria + "'";
-                DataSet ds = DataAccessDb.fillDataSet(sql);
+                
+                DataSet ds = dataAccess.fillDataSet(sql);
                 dataGridView1.DataSource = ds.Tables[0];
             }
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
     public class DataAccessDb
     {
-        public static SqlConnection sqlConnection = new SqlConnection("Server=SAMTECMEDIA\\SQLEXPRESS;Database=ToDoApp;Trusted_Connection=True");
+        public SqlConnection sqlConnection = new SqlConnection("Server=SAMTECMEDIA\\SQLEXPRESS;Database=ToDoApp;Trusted_Connection=True");
 
-        public static DataSet fillDataSet(string sql)
+        public DataSet fillDataSet(string sql)
         {
             try
             {
-                DataSet dset = new DataSet();                                   //ToDoList.DataAccessDb' 
+                DataSet dset = new DataSet();                                   //ToDoList.DataAccessDb' SAMTECMEDIA\\SQLEXPRESS
                 SqlCommand cmd = new SqlCommand(sql, sqlConnection);
                 SqlDataAdapter adp = new SqlDataAdapter(cmd);
                 adp.Fill(dset);
-                MessageBox.Show("Connection successful");
+                //MessageBox.Show("Connection successful");
                 return dset;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: "+ex.Message);
+                MessageBox.Show("Error: " + ex.Message);
             }
             return null;
         }
